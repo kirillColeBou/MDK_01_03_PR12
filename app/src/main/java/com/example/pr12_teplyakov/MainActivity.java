@@ -3,6 +3,7 @@ package com.example.pr12_teplyakov;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.activity.EdgeToEdge;
@@ -50,6 +51,46 @@ public class MainActivity extends AppCompatActivity {
         if(fio.getText().length() == 0) AlertDialog("Уведомление", "Пожалуйста, укажите Фамилию, Имя и Отчество!");
         else if(phone.getText().length() == 0) AlertDialog("Уведомление", "Пожалуйста, укажите номер телефона!");
         else if(address.getText().length() == 0) AlertDialog("Уведомление", "Пожалуйста, укажите адрес доставки!");
-        else AlertDialog("Уведомление", "Заказ оформлен!");
+        else
+        {
+            AlertDialogWithChoice("Подтверждение", "Вы уверены, что готовы сделать заказ?");
+        }
+    }
+
+    public void AlertDialogWithChoice(String title, String message){
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle(title).setMessage(message).setCancelable(false);
+
+        final String[] items = new String[12];
+        for (int i = 0; i < 12; i++) {
+            items[i] = String.valueOf(i + 1);
+        }
+        builder.setSingleChoiceItems(items, -1, null);
+
+        builder.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String[] items = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Выбор столика")
+                        .setSingleChoiceItems(items, 0, null)
+                        .setPositiveButton("Готово", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                AlertDialog("Уведомление", "Ваша бронь была успешно добавлена, ожидаем вас в любое удобное время!");
+                            }
+                        })
+                        .setNegativeButton("Столик не нужен", null)
+                        .show();
+            }
+        });
+        builder.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }
